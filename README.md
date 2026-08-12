@@ -1,2 +1,2 @@
-# Deriv-ai--analyser
-Synthetic markets analyser
+# -ai--analyser
+ markets 
