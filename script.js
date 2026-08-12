@@ -1,22 +1,12 @@
-// ==============================
-// Main Controller
-// ==============================
+/**
+ * ============================================
+ * Deriv Even/Odd AI Analyzer
+ * script.js
+ * Main application entry point
+ * ============================================
+ */
 
-function processDigit(lastDigit) {
-
-    // Update Even/Odd statistics
-    updateEvenOddAnalysis(lastDigit);
-
-    // Detect patterns
-    detectPatterns();
-
-    // Generate signal
-    generateSignal();
-
-    // Run AI decision engine
-    runAI();
-
-    // Update screen
-    updateDashboard();
-
-}
+window.addEventListener("load", () => {
+    console.log(`${CONFIG.APP.NAME} v${CONFIG.APP.VERSION}`);
+    DerivAPI.connect();
+});
