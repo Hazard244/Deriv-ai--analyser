@@ -1,14 +1,7 @@
-const CONFIG = {
-  DERIV: {
-    APP_ID: 1089,
-    WS_URL: "wss://ws.derivws.com/websockets/v3?app_id=1089"
-  },
+const APP_ID = "1089";
+const WS_URL = `wss://ws.derivws.com/websockets/v3?app_id=${APP_ID}`;
 
-  GROQ: {
-    API_URL: "https://api.groq.com/openai/v1/chat/completions",
+const SYMBOL = "R_100";
+const MAX_HISTORY = 100;
 
-    // ⚠️ Leave this blank for now.
-    // We'll secure your API key later.
-    API_KEY: ""
-  }
-};
+const CONFIDENCE_THRESHOLD = 65;
