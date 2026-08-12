@@ -1,90 +1,151 @@
-// evenodd.js
-// ===============================
-// Even/Odd Analysis Engine
-// Stores the latest 100 ticks,
-// calculates probabilities,
-// and updates the dashboard.
-// ===============================
+// ==========================================
+// DERIV AI EVEN/ODD ENGINE v2.0
+// ==========================================
 
-// Store last digits
-const digitHistory = [];
+// Configuration
 const MAX_HISTORY = 100;
+
+// History
+let digitHistory = [];
 
 // Process every incoming tick
 function processTick(price) {
 
-    // Convert price to string
-    const priceString = price.toString();
+    const cleanPrice = price.toString().replace(/\D/g, "");
 
-    // Keep only numeric characters
-    const digits = priceString.replace(/\D/g, "");
+    if (cleanPrice.length === 0) return;
 
-    if (digits.length === 0) return;
+    const lastDigit = parseInt(
+        cleanPrice[cleanPrice.length - 1]
+    );
 
-    // Extract last digit
-    const lastDigit = parseInt(digits[digits.length - 1]);
-
-    // Save digit
     digitHistory.push(lastDigit);
 
-    // Keep only latest 100 digits
     if (digitHistory.length > MAX_HISTORY) {
         digitHistory.shift();
     }
 
-    // Refresh analysis
-    updateEvenOddAnalysis();
+    analyzeEvenOdd(lastDigit);
+
 }
 
-// Analyse stored digits
-function updateEvenOddAnalysis() {
+// Main Analysis
+function analyzeEvenOdd(lastDigit) {
 
     let even = 0;
     let odd = 0;
 
-    // Count Even & Odd
     digitHistory.forEach(digit => {
+
         if (digit % 2 === 0) {
             even++;
         } else {
             odd++;
         }
+
     });
 
-    const total = digitHistory.length || 1;
+    const total = digitHistory.length;
 
-    const evenProbability = Number(
-        ((even / total) * 100).toFixed(1)
+    if (total === 0) return;
+
+    const evenProbability = (even / total) * 100;
+    const oddProbability = (odd / total) * 100;
+
+    // Recent momentum (last 20 ticks)
+    const recent = digitHistory.slice(-20);
+
+    let recentEven = 0;
+    let recentOdd = 0;
+
+    recent.forEach(digit => {
+
+        if (digit % 2 === 0) {
+            recentEven++;
+        } else {
+            recentOdd++;
+        }
+
+    });
+
+    // Streak detection
+    let streakType = "NONE";
+    let streak = 1;
+
+    if (digitHistory.length >= 2) {
+
+        for (
+            let i = digitHistory.length - 1;
+            i > 0;
+            i--
+        ) {
+
+            const current =
+                digitHistory[i] % 2 === 0
+                    ? "EVEN"
+                    : "ODD";
+
+            const previous =
+                digitHistory[i - 1] % 2 === 0
+                    ? "EVEN"
+                    : "ODD";
+
+            if (current === previous) {
+
+                streak++;
+
+            } else {
+
+                streakType = current;
+                break;
+
+            }
+
+        }
+
+    }
+
+    // Confidence
+    let confidence = Math.max(
+        evenProbability,
+        oddProbability
     );
 
-    const oddProbability = Number(
-        ((odd / total) * 100).toFixed(1)
+    confidence += streak * 2;
+
+    confidence += Math.abs(
+        recentEven - recentOdd
     );
+
+    if (confidence > 99) confidence = 99;
+
+    // Bias
+    const bias =
+        evenProbability >= oddProbability
+            ? "EVEN"
+            : "ODD";
 
     // Update dashboard
-    const evenElement = document.getElementById("evenProbability");
-    const oddElement = document.getElementById("oddProbability");
+    updateDashboard({
 
-    if (evenElement) {
-        evenElement.textContent = evenProbability + "%";
-    }
+        lastDigit,
 
-    if (oddElement) {
-        oddElement.textContent = oddProbability + "%";
-    }
+        even,
 
-    // Generate trading signal
-    if (typeof generateSignal === "function") {
-        generateSignal(evenProbability, oddProbability);
-    }
-}
+        odd,
 
-// Optional helper functions
+        evenProbability,
 
-function getDigitHistory() {
-    return digitHistory;
-}
+        oddProbability,
 
-function clearDigitHistory() {
-    digitHistory.length = 0;
+        confidence,
+
+        bias,
+
+        streak,
+
+        streakType
+
+    });
+
 }
