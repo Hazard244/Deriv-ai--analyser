@@ -1,5 +1,8 @@
+// ==========================================
+// DERIV LIVE TICK ENGINE
+// ==========================================
+
 let ws = null;
-let currentSymbol = "R_10";
 
 const symbolMap = {
     "Volatility 10": "R_10",
@@ -16,8 +19,6 @@ const symbolMap = {
 
 function connectDeriv(symbol = "R_10") {
 
-    currentSymbol = symbol;
-
     if (ws) {
         ws.close();
     }
@@ -26,36 +27,39 @@ function connectDeriv(symbol = "R_10") {
 
     ws.onopen = () => {
 
-        document.getElementById("status").textContent = "Connected";
-        document.getElementById("status").style.color = "#00ff88";
+        displayConnection("Connected");
 
         ws.send(JSON.stringify({
             ticks: symbol,
             subscribe: 1
         }));
+
     };
 
     ws.onmessage = (event) => {
 
-        const data = JSON.parse(event.data);
+        const response = JSON.parse(event.data);
 
-        if (data.tick) {
+        if (response.tick) {
 
-            const price = data.tick.quote;
+            const price = response.tick.quote;
 
-            console.log("Live Tick:", price);
-
-            if(window.onNewTick){
-                window.onNewTick(price);
-            }
+            processTick(price);
 
         }
 
     };
 
-    ws.onclose = () => {
-        document.getElementById("status").textContent = "Disconnected";
-        document.getElementById("status").style.color = "red";
+    ws.onerror = () => {
+
+        displayConnection("Connection Error");
+
     };
 
-                                }
+    ws.onclose = () => {
+
+        displayConnection("Disconnected");
+
+    };
+
+}
