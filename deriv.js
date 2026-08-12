@@ -1,65 +1,71 @@
-// ==========================================
-// DERIV LIVE TICK ENGINE
-// ==========================================
+// ==============================
+// Deriv WebSocket Connection
+// ==============================
 
 let ws = null;
+let connected = false;
 
-const symbolMap = {
-    "Volatility 10": "R_10",
-    "Volatility 10 (1s)": "1HZ10V",
-    "Volatility 25": "R_25",
-    "Volatility 25 (1s)": "1HZ25V",
-    "Volatility 50": "R_50",
-    "Volatility 50 (1s)": "1HZ50V",
-    "Volatility 75": "R_75",
-    "Volatility 75 (1s)": "1HZ75V",
-    "Volatility 100": "R_100",
-    "Volatility 100 (1s)": "1HZ100V"
-};
+function connectDeriv() {
 
-function connectDeriv(symbol = "R_10") {
+    console.log("Connecting to Deriv...");
 
-    if (ws) {
-        ws.close();
-    }
+    ws = new WebSocket(WS_URL);
 
-    ws = new WebSocket(CONFIG.DERIV.WS_URL);
+    ws.onopen = function () {
 
-    ws.onopen = () => {
+        connected = true;
 
-        displayConnection("Connected");
+        console.log("Connected.");
 
         ws.send(JSON.stringify({
-            ticks: symbol,
+            ticks: SYMBOL,
             subscribe: 1
         }));
 
     };
 
-    ws.onmessage = (event) => {
+    ws.onmessage = function (event) {
 
-        const response = JSON.parse(event.data);
+        const data = JSON.parse(event.data);
 
-        if (response.tick) {
+        if (!data.tick) return;
 
-            const price = response.tick.quote;
+        const price = data.tick.quote;
 
-            processTick(price);
+        const lastDigit = Number(
+            price.toString().slice(-1)
+        );
+
+        if (!isNaN(lastDigit)) {
+
+            console.log("Last Digit:", lastDigit);
+
+            if (typeof processDigit === "function") {
+
+                processDigit(lastDigit);
+
+            }
 
         }
 
     };
 
-    ws.onerror = () => {
+    ws.onerror = function (error) {
 
-        displayConnection("Connection Error");
+        console.log("WebSocket Error", error);
 
     };
 
-    ws.onclose = () => {
+    ws.onclose = function () {
 
-        displayConnection("Disconnected");
+        connected = false;
+
+        console.log("Disconnected. Reconnecting in 3 seconds...");
+
+        setTimeout(connectDeriv, 3000);
 
     };
 
 }
+
+connectDeriv();
