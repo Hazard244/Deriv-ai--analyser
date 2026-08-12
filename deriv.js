@@ -1,71 +1,75 @@
-// ==============================
-// Deriv WebSocket Connection
-// ==============================
+/**
+ * ==========================================================
+ * Deriv Even/Odd AI Analyzer
+ * deriv.js
+ * Handles WebSocket connection and authentication
+ * ==========================================================
+ */
 
 let ws = null;
-let connected = false;
 
-function connectDeriv() {
+const DerivAPI = {
 
-    console.log("Connecting to Deriv...");
+    appId: null,
+    token: null,
+    connected: false,
 
-    ws = new WebSocket(WS_URL);
+    async connect() {
 
-    ws.onopen = function () {
+        this.appId = prompt("Enter your Deriv App ID");
+        this.token = prompt("Enter your Deriv API Token");
 
-        connected = true;
-
-        console.log("Connected.");
-
-        ws.send(JSON.stringify({
-            ticks: SYMBOL,
-            subscribe: 1
-        }));
-
-    };
-
-    ws.onmessage = function (event) {
-
-        const data = JSON.parse(event.data);
-
-        if (!data.tick) return;
-
-        const price = data.tick.quote;
-
-        const lastDigit = Number(
-            price.toString().slice(-1)
-        );
-
-        if (!isNaN(lastDigit)) {
-
-            console.log("Last Digit:", lastDigit);
-
-            if (typeof processDigit === "function") {
-
-                processDigit(lastDigit);
-
-            }
-
+        if (!this.appId || !this.token) {
+            alert("App ID and API Token are required.");
+            return;
         }
 
-    };
+        ws = new WebSocket(
+            `${CONFIG.API.URL}?app_id=${this.appId}`
+        );
 
-    ws.onerror = function (error) {
+        ws.onopen = () => {
 
-        console.log("WebSocket Error", error);
+            console.log("Connected to Deriv");
 
-    };
+            this.connected = true;
 
-    ws.onclose = function () {
+            this.authorize();
 
-        connected = false;
+        };
 
-        console.log("Disconnected. Reconnecting in 3 seconds...");
+        ws.onmessage = (event) => {
 
-        setTimeout(connectDeriv, 3000);
+            const data = JSON.parse(event.data);
 
-    };
+            console.log(data);
 
-}
+        };
 
-connectDeriv();
+        ws.onerror = (error) => {
+
+            console.error("WebSocket Error", error);
+
+        };
+
+        ws.onclose = () => {
+
+            console.log("Disconnected");
+
+            this.connected = false;
+
+        };
+
+    },
+
+    authorize() {
+
+        ws.send(JSON.stringify({
+
+            authorize: this.token
+
+        }));
+
+    }
+
+};
