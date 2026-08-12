@@ -11,3 +11,11 @@ window.onload = () => {
     });
 
 };
+window.onNewTick = function(price) {
+
+    document.getElementById("price").textContent =
+        "Live Price: " + price;
+
+    processTick(price);
+
+};
