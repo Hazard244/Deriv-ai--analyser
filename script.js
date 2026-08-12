@@ -1,117 +1,100 @@
-// =============================
-// DERIV AI EVEN/ODD ANALYSER
-// Main Controller
-// =============================
+// ==========================================
+// DERIV AI ANALYSER
+// Dashboard Controller v1.0
+// ==========================================
 
-let signalCooldown = false;
-let lastSignal = "NONE";
-let signalStrength = 0;
+let currentMarket = "Volatility 10";
 
-const ui = {
-    lastDigit: document.getElementById("lastDigit"),
-    evenCount: document.getElementById("evenCount"),
-    oddCount: document.getElementById("oddCount"),
-    evenProbability: document.getElementById("evenProbability"),
-    oddProbability: document.getElementById("oddProbability"),
-    confidence: document.getElementById("confidence"),
-    recommendation: document.getElementById("recommendation"),
-    status: document.getElementById("status"),
-    signal: document.getElementById("signal"),
-    marketBias: document.getElementById("marketBias")
+window.onload = () => {
+
+    connectDeriv("R_10");
+
+    const market = document.getElementById("marketSelect");
+
+    if (market) {
+
+        market.addEventListener("change", () => {
+
+            currentMarket = market.value;
+
+            connectDeriv(symbolMap[currentMarket]);
+
+        });
+
+    }
+
 };
 
-function updateDashboard(data){
+// Called by evenodd.js whenever analysis updates
+function updateDashboard(data) {
 
-    ui.lastDigit.textContent = data.lastDigit;
+    setText("lastDigit", data.lastDigit);
 
-    ui.evenCount.textContent = data.even;
+    setText("evenCount", data.even);
 
-    ui.oddCount.textContent = data.odd;
+    setText("oddCount", data.odd);
 
-    ui.evenProbability.textContent =
-        data.evenProbability.toFixed(1) + "%";
+    setText(
+        "evenProbability",
+        data.evenProbability.toFixed(1) + "%"
+    );
 
-    ui.oddProbability.textContent =
-        data.oddProbability.toFixed(1) + "%";
+    setText(
+        "oddProbability",
+        data.oddProbability.toFixed(1) + "%"
+    );
 
-    ui.confidence.textContent =
-        data.confidence.toFixed(1) + "%";
+    const signal = Signals.generate(digitHistory);
 
-    ui.marketBias.textContent = data.bias;
+    setText("confidence", signal.confidence + "%");
 
-    createRecommendation(data);
+    setText("decision", signal.decision);
 
-}
+    setText("direction", signal.direction);
 
-function createRecommendation(data){
+    setText("opportunity", signal.score + "%");
 
-    if(signalCooldown){
-        ui.status.textContent="COOLDOWN";
-        return;
-    }
-
-    let confidence=data.confidence;
-
-    signalStrength=confidence;
-
-    if(confidence<60){
-
-        ui.status.textContent="WAIT";
-        ui.signal.textContent="NO TRADE";
-        ui.recommendation.textContent="Market has no edge.";
-
-        return;
-
-    }
-
-    if(confidence>=60 && confidence<75){
-
-        ui.status.textContent="PREPARE";
-
-        ui.signal.textContent=data.bias;
-
-        ui.recommendation.textContent=
-        "Edge developing. Wait for confirmation.";
-
-        return;
-
-    }
-
-    if(confidence>=75){
-
-        ui.status.textContent="TRADE";
-
-        ui.signal.textContent=data.bias;
-
-        ui.recommendation.textContent=
-        "High probability setup.";
-
-        startCooldown();
-
-    }
+    displayReasons(signal.reasons);
 
 }
 
-function startCooldown(){
+// Utility
 
-    signalCooldown=true;
+function setText(id, value) {
 
-    setTimeout(()=>{
+    const element = document.getElementById(id);
 
-        signalCooldown=false;
-
-    },30000);
-
-}
-
-function displayConnection(state){
-
-    const connection=document.getElementById("connection");
-
-    if(!connection) return;
-
-    connection.textContent=state;
+    if (element)
+        element.textContent = value;
 
 }
 
-displayConnection("Connecting...");
+// Display signal reasons
+
+function displayReasons(reasons) {
+
+    const panel = document.getElementById("reasons");
+
+    if (!panel) return;
+
+    panel.innerHTML = "";
+
+    reasons.forEach(reason => {
+
+        const item = document.createElement("li");
+
+        item.textContent = reason;
+
+        panel.appendChild(item);
+
+    });
+
+}
+
+// Connection status
+
+function displayConnection(status) {
+
+    setText("status", status);
+
+}
