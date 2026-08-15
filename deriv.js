@@ -438,5 +438,3 @@ const Deriv = (() => {
 })();
 
 window.Deriv = Deriv;
-  
-  
