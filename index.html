@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Deriv AI Even/Odd Analyzer v4.1</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+  <header>
+    <h1>Deriv AI Even/Odd Analyzer</h1>
+    <p id="connection">Starting...</p>
+    <p id="status">--</p>
+  </header>
+
+  <section class="controls">
+    <label for="market">Market</label>
+    <select id="market"></select>
+  </section>
+
+  <section class="grid">
+    <article class="card"><span>Price</span><strong id="price">--</strong></article>
+    <article class="card"><span>Last Digit</span><strong id="digit">--</strong></article>
+    <article class="card"><span>Signal</span><strong id="level">WAIT</strong></article>
+    <article class="card"><span>Direction</span><strong id="direction">NEUTRAL</strong></article>
+    <article class="card"><span>Confidence</span><strong id="confidence">--</strong></article>
+    <article class="card"><span>Regime</span><strong id="regime">UNKNOWN</strong></article>
+    <article class="card"><span>50-Tick Even</span><strong id="even">--</strong></article>
+    <article class="card"><span>50-Tick Odd</span><strong id="odd">--</strong></article>
+    <article class="card"><span>Entropy</span><strong id="entropy">--</strong></article>
+    <article class="card"><span>Markov E / O</span><strong id="markov">--</strong></article>
+  </section>
+
+  <section class="reason">
+    <h2>Analysis</h2>
+    <p id="reason">Collecting data...</p>
+  </section>
+
+  <section class="notice">
+    Read-only analyzer. No automatic trades are placed.
+  </section>
+</main>
+
+<script src="config.js"></script>
+<script src="deriv.js"></script>
+<script src="evenodd.js"></script>
+<script src="statistics.js"></script>
+<script src="patterns.js"></script>
+<script src="signals.js"></script>
+<script src="ai.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
