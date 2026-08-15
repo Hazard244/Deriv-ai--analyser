@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Deriv Volatility Even/Odd market-data analyzer">
+  <title>Deriv Even/Odd AI Analyzer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <div>
+        <p class="eyebrow">DERIV • VOLATILITY INDICES • EVEN / ODD</p>
+        <h1>AI Market Analyzer <span id="marketName">V10</span></h1>
+        <p class="sub">Read-only market analysis • no trading execution • public tick data</p>
+      </div>
+      <div class="header-actions">
+        <span id="connectionStatus" class="status offline">READY</span>
+        <button id="connectBtn" class="primary">Connect</button>
+      </div>
+    </header>
+
+    <section class="controls card">
+      <label for="marketSelect">Market</label>
+      <select id="marketSelect"></select>
+      <div class="small-note">
+        No API token is stored or requested. The analyzer uses public market-data ticks.
+      </div>
+    </section>
+
+    <section class="hero-grid">
+      <div class="card decision-card">
+        <div class="section-title">Decision</div>
+        <div id="decision" class="decision">WAIT</div>
+        <div class="decision-row">
+          <div><span>Level</span><strong id="decisionLevel">WAIT</strong></div>
+          <div><span>Confidence</span><strong id="confidence">50.0%</strong></div>
+          <div><span>Score</span><strong id="score">0.0/100</strong></div>
+          <div><span>Separation</span><strong id="separation">0.0</strong></div>
+        </div>
+        <div class="reason-box">
+          <span>Analysis</span>
+          <p id="reason">Collecting tick history…</p>
+        </div>
+      </div>
+
+      <div class="card market-card">
+        <div class="section-title">Live Market</div>
+        <div class="price" id="price">—</div>
+        <div class="market-row">
+          <div><span>Last digit</span><strong id="lastDigit">—</strong></div>
+          <div><span>Stored ticks</span><strong id="tickCount">0</strong></div>
+          <div><span>Mode</span><strong id="dataMode">—</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-grid">
+      <div class="card">
+        <div class="section-title">Parity Windows</div>
+        <div class="metric-grid">
+          <div><span>Even 100</span><strong id="even100">—</strong></div>
+          <div><span>Odd 100</span><strong id="odd100">—</strong></div>
+          <div><span>Even 500</span><strong id="even500">—</strong></div>
+          <div><span>Odd 500</span><strong id="odd500">—</strong></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Pattern Engine</div>
+        <div class="metric-grid">
+          <div><span>Momentum</span><strong id="momentum">—</strong></div>
+          <div><span>Switch rate</span><strong id="switchRate">—</strong></div>
+          <div><span>Entropy</span><strong id="entropy">—</strong></div>
+          <div><span>Streak</span><strong id="streak">—</strong></div>
+          <div><span>Markov</span><strong id="markov">—</strong></div>
+          <div><span>Model agreement</span><strong id="agreement">0%</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">Recent Digits</div>
+      <div id="digitHistory" class="digits">Waiting for ticks…</div>
+    </section>
+
+    <section class="card info">
+      <div class="section-title">Signal Levels</div>
+      <div class="levels">
+        <span><b>WAIT</b> — insufficient edge</span>
+        <span><b>PREPARE</b> — developing setup</span>
+        <span><b>EARLY</b> — multiple features align</span>
+        <span><b>CONFIRMED</b> — stronger agreement</span>
+        <span><b>HIGH</b> — strongest monitored setup</span>
+      </div>
+      <p class="warning">
+        This is an analytical tool, not a guarantee of future Even/Odd outcomes.
+        Signals must be forward-tested before being used for real-money decisions.
+      </p>
+    </section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="statistics.js"></script>
+  <script src="patterns.js"></script>
+  <script src="signals.js"></script>
+  <script src="evenodd.js"></script>
+  <script src="ai.js"></script>
+  <script src="deriv.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
