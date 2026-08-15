@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Deriv AI Even/Odd Analyzer V5.3</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+  <header>
+    <h1>Deriv AI Even/Odd Analyzer</h1>
+    <p id="connection">Starting...</p>
+    <p id="status">0/10 histories • 0 live ticks</p>
+  </header>
+
+  <section class="hero-grid">
+    <article class="hero-card"><span>Leader</span><strong id="leader">--</strong></article>
+    <article class="hero-card"><span>Signal</span><strong id="signal">WAIT</strong></article>
+    <article class="hero-card"><span>Direction</span><strong id="direction">NEUTRAL</strong></article>
+    <article class="hero-card"><span>Opportunity</span><strong id="opportunity">--</strong></article>
+    <article class="hero-card"><span>Confidence</span><strong id="confidence">--</strong></article>
+    <article class="hero-card"><span>Regime</span><strong id="regime">UNKNOWN</strong></article>
+  </section>
+
+  <section class="panel">
+    <h2>Top 3 Opportunities</h2>
+    <div id="ranking" class="ranking"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Deep Analysis — Top 3</h2>
+    <div id="deep" class="deep"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Current Leader Analysis</h2>
+    <p id="reason">Scanner is collecting data...</p>
+  </section>
+
+  <section class="notice">
+    V5.3 live-stream monitor. One persistent WebSocket handles all 10 histories + live tick subscriptions. Read-only; no automatic trades are placed.
+  </section>
+</main>
+
+<script src="config.js"></script>
+<script src="deriv.js"></script>
+<script src="scanner.js"></script>
+<script src="deepanalysis.js"></script>
+<script src="signals.js"></script>
+<script src="ai.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
