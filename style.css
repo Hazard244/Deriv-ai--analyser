@@ -1,0 +1,32 @@
+*{box-sizing:border-box}
+body{margin:0;background:#080d19;color:#edf2f7;font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+.app{max-width:1100px;margin:auto;padding:18px}
+header{margin-bottom:16px}
+h1{font-size:clamp(22px,5vw,34px);margin:0 0 6px}
+header p{margin:4px 0;color:#94a3b8}
+.hero-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
+.hero-card,.panel,.notice{background:#121a2d;border:1px solid #25304a;border-radius:14px}
+.hero-card{padding:15px;min-height:90px}
+.hero-card span{display:block;color:#94a3b8;font-size:13px;margin-bottom:7px}
+.hero-card strong{font-size:21px}
+.panel{margin-top:12px;padding:15px}
+.panel h2{font-size:17px;margin:0 0 12px}
+.ranking{display:grid;gap:8px}
+.rank{display:grid;grid-template-columns:42px 1fr 70px 90px 55px;gap:8px;align-items:center;background:#0c1323;border:1px solid #202a40;border-radius:10px;padding:10px;font-size:13px}
+.rank-number{color:#8ea1bf}
+.rank b{text-align:right}
+.deep{display:grid;gap:8px}
+.deep-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:#0c1323;border:1px solid #202a40;border-radius:10px;padding:10px;font-size:13px}
+.deep-row strong{min-width:80px}
+#reason{color:#c0ccdf;line-height:1.5}
+.notice{margin-top:12px;padding:11px;color:#8fa0ba;font-size:12px}
+@media(max-width:600px){.rank{grid-template-columns:34px 1fr 58px 72px 48px;font-size:11px}.hero-card strong{font-size:18px}}
+
+.validation-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.validation-card{background:#0c1323;border:1px solid #202a40;border-radius:10px;padding:11px}
+.validation-card strong{display:block;font-size:14px;margin-bottom:5px}
+.validation-card span{display:block;color:#9eacc1;font-size:12px;line-height:1.5}
+.validation-card .good{color:#b7f7c5}.validation-card .warn{color:#ffd38a}.validation-card .bad{color:#ffaaa8}
+@media(max-width:600px){.validation-grid{grid-template-columns:1fr}}
+.gate-checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px;margin-top:8px}
+.gate-checks span{font-size:.9rem}
